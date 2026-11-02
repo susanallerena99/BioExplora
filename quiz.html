@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioExplora - Quiz</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #eef7f2;
+  margin: 0;
+  padding: 20px;
+  color: #244438;
+}
+
+.container {
+  max-width: 500px;
+  margin: 20px auto;
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px #00000015;
+}
+
+h1 {
+  text-align: center;
+  color: #16866b;
+}
+
+.subtitle {
+  text-align: center;
+  color: #668077;
+}
+
+.progress {
+  background: #dcebe4;
+  height: 9px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+#progressBar {
+  background: #20a77d;
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s;
+}
+
+#question {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border: 2px solid #dcebe4;
+  border-radius: 12px;
+  background: white;
+  color: #244438;
+  text-align: left;
+  font-size: 16px;
+}
+
+.option:disabled {
+  opacity: 1;
+}
+
+.correct {
+  background: #d8f5e5;
+  border-color: #20a77d;
+}
+
+.incorrect {
+  background: #ffe1e1;
+  border-color: #df7777;
+}
+
+#feedback {
+  margin: 18px 0;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+#next, #restart {
+  width: 100%;
+  padding: 14px;
+  background: #16866b;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+#score {
+  text-align: center;
+  font-size: 23px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🧬 BioExplora</h1>
+  <p class="subtitle">Quiz: La célula animal</p>
+
+  <div id="game">
+
+    <p id="counter">Pregunta 1 de 5</p>
+
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
+
+    <div id="question"></div>
+
+    <div id="options"></div>
+
+    <div id="feedback"></div>
+
+    <button id="next" class="hidden" onclick="nextQuestion()">
+      Siguiente pregunta
+    </button>
+
+  </div>
+
+  <div id="result" class="hidden">
+    <h2>¡Cuestionario terminado! 🎉</h2>
+    <p id="score"></p>
+    <p id="message"></p>
+    <button id="restart" onclick="restartQuiz()">
+      Volver a intentar
+    </button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    question: "¿Qué estructura controla las actividades de la célula?",
+    options: ["Mitocondria", "Núcleo", "Ribosoma", "Lisosoma"],
+    answer: 1,
+    explanation: "El núcleo contiene el ADN y participa en la regulación de las actividades celulares."
+  },
+  {
+    question: "¿Cuál es la función principal de las mitocondrias?",
+    options: ["Producir energía", "Almacenar agua", "Fabricar lípidos", "Destruir el ADN"],
+    answer: 0,
+    explanation: "Las mitocondrias producen ATP mediante la respiración celular."
+  },
+  {
+    question: "¿Dónde se sintetizan las proteínas?",
+    options: ["Lisosomas", "Núcleo", "Ribosomas", "Membrana"],
+    answer: 2,
+    explanation: "Los ribosomas son las estructuras encargadas de sintetizar proteínas."
+  },
+  {
+    question: "¿Qué estructura delimita la célula?",
+    options: ["Aparato de Golgi", "Membrana plasmática", "Nucléolo", "Centrosoma"],
+    answer: 1,
+    explanation: "La membrana plasmática separa el interior celular del medio externo."
+  },
+  {
+    question: "¿Qué organelo participa en la digestión celular?",
+    options: ["Lisosoma", "Mitocondria", "Ribosoma", "Centrosoma"],
+    answer: 0,
+    explanation: "Los lisosomas contienen enzimas que degradan diferentes sustancias."
+  }
+];
+
+let current = 0;
+let points = 0;
+let answered = false;
+
+function showQuestion() {
+  answered = false;
+
+  const q = questions[current];
+
+  document.getElementById("counter").textContent =
+    "Pregunta " + (current + 1) + " de " + questions.length;
+
+  document.getElementById("progressBar").style.width =
+    (current / questions.length * 100) + "%";
+
+  document.getElementById("question").textContent = q.question;
+
+  document.getElementById("feedback").textContent = "";
+
+  document.getElementById("next").classList.add("hidden");
+
+  const options = document.getElementById("options");
+  options.innerHTML = "";
+
+  q.options.forEach((option, index) => {
+    const button = document.createElement("button");
+
+    button.textContent = option;
+    button.className = "option";
+
+    button.onclick = function() {
+      checkAnswer(index, button);
+    };
+
+    options.appendChild(button);
+  });
+}
+
+function checkAnswer(index, selectedButton) {
+  if (answered) return;
+
+  answered = true;
+
+  const q = questions[current];
+  const buttons = document.querySelectorAll(".option");
+
+  buttons.forEach(button => button.disabled = true);
+
+  if (index === q.answer) {
+    points++;
+    selectedButton.classList.add("correct");
+
+    document.getElementById("feedback").textContent =
+      "¡Correcto! 🎉 " + q.explanation;
+  } else {
+    selectedButton.classList.add("incorrect");
+    buttons[q.answer].classList.add("correct");
+
+    document.getElementById("feedback").textContent =
+      "No es correcto. " + q.explanation;
+  }
+
+  document.getElementById("next").classList.remove("hidden");
+
+  if (current === questions.length - 1) {
+    document.getElementById("next").textContent = "Ver resultado";
+  }
+}
+
+function nextQuestion() {
+  current++;
+
+  if (current < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  document.getElementById("score").textContent =
+    points + " de " + questions.length + " respuestas correctas";
+
+  let message = "";
+
+  if (points === 5) {
+    message = "¡Excelente! Dominas este tema. 🏆";
+  } else if (points >= 3) {
+    message = "¡Muy bien! Sigue practicando. 🌱";
+  } else {
+    message = "¡No te desanimes! Aprender es un proceso. 💚";
+  }
+
+  document.getElementById("message").textContent = message;
+}
+
+function restartQuiz() {
+  current = 0;
+  points = 0;
+
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+
+  document.getElementById("next").textContent = "Siguiente pregunta";
+
+  showQuestion();
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>

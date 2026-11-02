@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#087f68">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioExplora</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f7f5;
+  color: #193b39;
+}
+
+header {
+  background: linear-gradient(135deg,#075e54,#20a68b);
+  color: white;
+  padding: 25px 20px;
+  border-radius: 0 0 25px 25px;
+}
+
+header h1 { margin: 8px 0; }
+main { padding: 18px; }
+
+.welcome, .lesson, .detail {
+  background: white;
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
+
+.welcome p, .description {
+  color: #617773;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.topic {
+  background: white;
+  border: 1px solid #e3eeea;
+  border-radius: 16px;
+  padding: 15px 10px;
+  min-height: 125px;
+  text-align: left;
+  color: #193b39;
+}
+
+.topic:active { transform: scale(.97); }
+.emoji { font-size: 30px; }
+
+.topic h3 {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.topic p {
+  font-size: 12px;
+  color: #728681;
+  margin: 0;
+}
+
+#detail { display: none; }
+
+.cell-picture {
+  width: 100%;
+  background: #f0faf6;
+  border-radius: 16px;
+  padding: 5px;
+  margin: 15px 0;
+}
+
+svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.marker {
+  cursor: pointer;
+  outline: none;
+}
+
+.marker circle {
+  fill: #087c68;
+  stroke: white;
+  stroke-width: 3;
+}
+
+.marker text {
+  fill: white;
+  font-size: 17px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.marker:active circle { fill: #e28b36; }
+
+.instruction {
+  text-align: center;
+  font-size: 13px;
+  color: #617773;
+}
+
+.parts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.part-button {
+  border: 1px solid #dcebe5;
+  background: #f8fcfa;
+  color: #19584e;
+  border-radius: 12px;
+  padding: 12px 8px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.part-button:active { background: #d9f1e8; }
+
+.detail {
+  background: #e8f6f0;
+  border-left: 5px solid #087c68;
+  line-height: 1.6;
+  min-height: 130px;
+}
+
+.detail h3 { margin-top: 0; }
+
+.back {
+  background: #087c68;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #78908a;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div style="font-size:32px">🧬</div>
+  <h1>BioExplora</h1>
+  <p>Descubre el fascinante mundo de la biología y la biotecnología.</p>
+</header>
+
+<main>
+
+<section class="welcome">
+  <h2>¡Hola, explorador científico! 🔬</h2>
+  <p>Aprende, descubre y experimenta. Selecciona un tema para comenzar.</p>
+</section>
+
+<section id="home">
+  <h2>Explora el conocimiento</h2>
+
+  <div class="grid">
+    <button class="topic" onclick="openTopic('celula')">
+      <div class="emoji">🧫</div>
+      <h3>La célula</h3>
+      <p>La unidad básica de la vida</p>
+    </button>
+
+    <button class="topic" onclick="openTopic('adn')">
+      <div class="emoji">🧬</div>
+      <h3>ADN y genética</h3>
+      <p>El código de la vida</p>
+    </button>
+
+    <button class="topic" onclick="openTopic('micro')">
+      <div class="emoji">🦠</div>
+      <h3>Microbiología</h3>
+      <p>El universo microscópico</p>
+    </button>
+
+    <button class="topic" onclick="openTopic('vegetal')">
+      <div class="emoji">🌱</div>
+      <h3>Biotecnología vegetal</h3>
+      <p>El cultivo de tejidos</p>
+    </button>
+
+    <button class="topic" onclick="openTopic('lab')">
+      <div class="emoji">🔬</div>
+      <h3>Laboratorio</h3>
+      <p>Instrumentos y técnicas</p>
+    </button>
+
+    <button class="topic" onclick="openTopic('quiz')">
+      <div class="emoji">🎯</div>
+      <h3>Evaluaciones</h3>
+      <p>Comprueba lo aprendido</p>
+    </button>
+  </div>
+</section>
+
+<section id="cellLesson" class="lesson" style="display:none">
+  <h2>🧫 Explora la célula animal</h2>
+
+  <p class="description">
+    La célula animal es una célula eucariota. Tiene un núcleo
+    definido y diferentes orgánulos que realizan funciones
+    esenciales para mantenerla viva.
+  </p>
+
+  <p class="instruction">
+    Toca los círculos numerados de la ilustración para explorar
+    las estructuras celulares.
+  </p>
+
+  <div class="cell-picture">
+
+    <svg viewBox="0 0 600 420" role="img"
+         aria-label="Ilustración esquemática de una célula animal">
+
+      <!-- Membrana plasmática -->
+      <ellipse cx="300" cy="210" rx="270" ry="185"
+        fill="#c9eee0" stroke="#087c68" stroke-width="12"/>
+
+      <!-- Núcleo -->
+      <circle cx="245" cy="195" r="88"
+        fill="#b9b5ed" stroke="#6555a6" stroke-width="7"/>
+      <circle cx="260" cy="190" r="24" fill="#6555a6"/>
+
+      <!-- Retículo endoplasmático rugoso -->
+      <path d="M160 105 Q210 65 280 115
+               M155 125 Q215 85 290 135
+               M155 145 Q205 115 290 155"
+        fill="none" stroke="#3f8dbe" stroke-width="12"
+        stroke-linecap="round"/>
+
+      <!-- Mitocondrias -->
+      <g fill="#f5bd75" stroke="#c77b32" stroke-width="5">
+        <ellipse cx="425" cy="120" rx="48" ry="24"
+          transform="rotate(-25 425 120)"/>
+        <ellipse cx="420" cy="295" rx="48" ry="24"
+          transform="rotate(20 420 295)"/>
+      </g>
+      <g fill="none" stroke="#c77b32" stroke-width="4">
+        <path d="M385 120 Q400 90 414 125 T460 120"/>
+        <path d="M380 295 Q400 270 415 300 T460 295"/>
+      </g>
+
+      <!-- Aparato de Golgi -->
+      <g fill="none" stroke="#d68caa" stroke-width="10"
+         stroke-linecap="round">
+        <path d="M340 190 Q385 175 400 195"/>
+        <path d="M340 208 Q385 193 400 213"/>
+        <path d="M340 226 Q385 211 400 231"/>
+      </g>
+
+      <!-- Lisosoma -->
+      <circle cx="130" cy="270" r="22"
+        fill="#e9a4bd" stroke="#b85e83" stroke-width="5"/>
+
+      <!-- Ribosomas -->
+      <g fill="#176e9b">
+        <circle cx="185" cy="190" r="6"/>
+        <circle cx="195" cy="215" r="6"/>
+        <circle cx="310" cy="95" r="6"/>
+        <circle cx="325" cy="110" r="6"/>
+        <circle cx="330" cy="285" r="6"/>
+        <circle cx="350" cy="310" r="6"/>
+        <circle cx="270" cy="320" r="6"/>
+        <circle cx="190" cy="300" r="6"/>
+      </g>
+
+      <!-- Centrosoma -->
+      <g fill="#d8a64e">
+        <rect x="490" y="205" width="38" height="10"
+          rx="5" transform="rotate(35 509 210)"/>
+        <rect x="490" y="205" width="38" height="10"
+          rx="5" transform="rotate(125 509 210)"/>
+      </g>
+
+      <!-- Marcadores interactivos -->
+      <g class="marker" onclick="showPart('membrana')">
+        <circle cx="65" cy="90" r="19"/>
+        <text x="65" y="90">1</text>
+      </g>
+
+      <g class="marker" onclick="showPart('nucleo')">
+        <circle cx="245" cy="195" r="19"/>
+        <text x="245" y="195">2</text>
+      </g>
+
+      <g class="marker" onclick="showPart('mitocondria')">
+        <circle cx="430" cy="120" r="19"/>
+        <text x="430" y="120">3</text>
+      </g>
+
+      <g class="marker" onclick="showPart('ribosomas')">
+        <circle cx="330" cy="285" r="19"/>
+        <text x="330" y="285">4</text>
+      </g>
+
+      <g class="marker" onclick="showPart('golgi')">
+        <circle cx="375" cy="210" r="19"/>
+        <text x="375" y="210">5</text>
+      </g>
+
+      <g class="marker" onclick="showPart('lisosoma')">
+        <circle cx="130" cy="270" r="19"/>
+        <text x="130" y="270">6</text>
+      </g>
+
+      <g class="marker" onclick="showPart('reticulo')">
+        <circle cx="175" cy="105" r="19"/>
+        <text x="175" y="105">7</text>
+      </g>
+
+      <g class="marker" onclick="showPart('citoplasma')">
+        <circle cx="315" cy="350" r="19"/>
+        <text x="315" y="350">8</text>
+      </g>
+
+      <g class="marker" onclick="showPart('centrosoma')">
+        <circle cx="510" cy="210" r="19"/>
+        <text x="510" y="210">9</text>
+      </g>
+    </svg>
+
+  </div>
+
+  <h3>Partes de la célula</h3>
+
+  <div class="parts">
+    <button class="part-button" onclick="showPart('membrana')">1. Membrana</button>
+    <button class="part-button" onclick="showPart('nucleo')">2. Núcleo</button>
+    <button class="part-button" onclick="showPart('mitocondria')">3. Mitocondrias</button>
+    <button class="part-button" onclick="showPart('ribosomas')">4. Ribosomas</button>
+    <button class="part-button" onclick="showPart('golgi')">5. Aparato de Golgi</button>
+    <button class="part-button" onclick="showPart('lisosoma')">6. Lisosomas</button>
+    <button class="part-button" onclick="showPart('reticulo')">7. Retículo endoplasmático</button>
+    <button class="part-button" onclick="showPart('citoplasma')">8. Citoplasma</button>
+    <button class="part-button" onclick="showPart('centrosoma')">9. Centrosoma</button>
+  </div>
+
+  <section class="detail" id="partDetail">
+    <h3 id="partTitle">Explora una estructura</h3>
+    <p id="partText">Selecciona un número o una parte de la lista.</p>
+  </section>
+
+  <button class="back" onclick="goHome()">← Volver a los temas</button>
+</section>
+
+<section id="otherDetail" class="lesson" style="display:none">
+  <h2 id="otherTitle"></h2>
+  <p id="otherText" class="description"></p>
+  <button class="back" onclick="goHome()">← Volver a los temas</button>
+</section>
+
+</main>
+
+<footer>BIOEXPLORA · Aprende ciencia explorando 🔬</footer>
+
+<script>
+
+const parts = {
+  membrana: {
+    title: "1. Membrana plasmática",
+    text: "Es una estructura formada principalmente por una bicapa de fosfolípidos y proteínas. Delimita la célula y regula el intercambio de sustancias con el medio. También participa en la comunicación celular."
+  },
+  nucleo: {
+    title: "2. Núcleo",
+    text: "Es el compartimento que contiene la mayor parte del ADN de la célula eucariota. Está rodeado por una envoltura nuclear con poros que regulan el intercambio de moléculas. El nucléolo participa en la formación de las subunidades ribosómicas."
+  },
+  mitocondria: {
+    title: "3. Mitocondrias",
+    text: "Son orgánulos con doble membrana. En ellas ocurre gran parte de la respiración celular aeróbica y se produce ATP, una molécula fundamental para suministrar energía a los procesos celulares."
+  },
+  ribosomas: {
+    title: "4. Ribosomas",
+    text: "Son complejos formados por ARN ribosómico y proteínas. Su función es sintetizar proteínas a partir de la información del ARN mensajero. Pueden encontrarse libres en el citoplasma o unidos al retículo endoplasmático rugoso."
+  },
+  golgi: {
+    title: "5. Aparato de Golgi",
+    text: "Es un conjunto de sacos membranosos. Modifica, clasifica y empaqueta proteínas y lípidos para dirigirlos hacia diferentes destinos dentro o fuera de la célula."
+  },
+  lisosoma: {
+    title: "6. Lisosomas",
+    text: "Son orgánulos que contienen enzimas digestivas. Participan en la degradación de materiales incorporados por la célula y en el reciclaje de componentes celulares."
+  },
+  reticulo: {
+    title: "7. Retículo endoplasmático",
+    text: "El retículo endoplasmático rugoso tiene ribosomas y participa en la síntesis y procesamiento de proteínas. El retículo liso interviene en la síntesis de lípidos, el metabolismo de sustancias y el almacenamiento de calcio."
+  },
+  citoplasma: {
+    title: "8. Citoplasma",
+    text: "Es el contenido celular situado entre la membrana plasmática y el núcleo. Incluye el citosol, los orgánulos y otras estructuras. En él ocurren numerosas reacciones metabólicas."
+  },
+  centrosoma: {
+    title: "9. Centrosoma",
+    text: "En muchas células animales funciona como centro organizador de microtúbulos. Participa en la organización del huso mitótico durante la división celular."
+  }
+};
+
+function showPart(id) {
+  document.getElementById("partTitle").textContent = parts[id].title;
+  document.getElementById("partText").textContent = parts[id].text;
+  document.getElementById("partDetail").scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+}
+
+const topics = {
+  adn: {
+    title: "🧬 ADN y genética",
+    text: "El ADN almacena la información genética. Su estructura es una doble hélice formada por nucleótidos con cuatro bases: adenina, timina, citosina y guanina."
+  },
+  micro: {
+    title: "🦠 Microbiología",
+    text: "La microbiología estudia microorganismos como bacterias, hongos microscópicos, protozoos y virus. Estos tienen gran importancia en la salud, los alimentos y los ecosistemas."
+  },
+  vegetal: {
+    title: "🌱 Biotecnología vegetal",
+    text: "La micropropagación permite multiplicar plantas a partir de pequeños explantes cultivados en condiciones controladas y asépticas in vitro."
+  },
+  lab: {
+    title: "🔬 Laboratorio",
+    text: "Conoce equipos como microscopios, micropipetas, balanzas, autoclaves y espectrofotómetros, además de técnicas de laboratorio y bioseguridad."
+  },
+  quiz: {
+    title: "🎯 Evaluaciones",
+    text: "¡Pronto podrás poner a prueba tus conocimientos con preguntas interactivas y puntuaciones!"
+  }
+};
+
+function openTopic(id) {
+  document.getElementById("home").style.display = "none";
+
+  if (id === "celula") {
+    document.getElementById("cellLesson").style.display = "block";
+    document.getElementById("otherDetail").style.display = "none";
+  } else {
+    document.getElementById("cellLesson").style.display = "none";
+    document.getElementById("otherDetail").style.display = "block";
+    document.getElementById("otherTitle").textContent = topics[id].title;
+    document.getElementById("otherText").textContent = topics[id].text;
+  }
+
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  document.getElementById("home").style.display = "block";
+  document.getElementById("cellLesson").style.display = "none";
+  document.getElementById("otherDetail").style.display = "none";
+  window.scrollTo(0, 0);
+}
+
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("BioExplora está lista"))
+      .catch(error => console.error("Error:", error));
+  });
+}
+</script>
+</body>
+</html>
